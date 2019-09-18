@@ -1,7 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
-const shortid = require('shortid');
+// const shortid = require('shortid');
 
 var log4jsLogger = require('../loggers/log4js_module');
 var helper = require('../utility/helpers');
@@ -43,7 +43,7 @@ router.post('/cr_acc', (req, res) => {
   var role = req.body.role;
   var password = req.body.password;
 
-  var phoneValidationStatus = phoneValidator(mobile_no, ccode);
+  var phoneValidationStatus = phoneNumberValidator(mobile_no, ccode);
 
   if (!phoneValidationStatus) {
     logger.error({ "r": "cr_acc", "method": "post", "msg": "phone Number invalid" });
@@ -61,7 +61,7 @@ router.post('/cr_acc', (req, res) => {
       return sendError(res, err, "server_error", constants.SERVER_ERROR);
     }
 
-    if (profile_data.length) {
+    if (profile_data) {
       logger.error({ "r": "cr_acc", "method": "post", "msg": "Account already exists" });
       return sendError(res, "Account already exists", "account_already_exists", constants.BAD_REQUEST);
     }

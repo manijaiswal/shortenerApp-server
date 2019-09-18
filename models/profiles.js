@@ -6,10 +6,10 @@ var Schema     =  mongoose.Schema;
  
 var AccountSchema  = new Schema({
     mobile_no:{type:Number,required:true},
-    name   : {type:String,required:true},
+    name   : {type:String,required:false},
     email  : {type:String,required:false},
     role   : {type:Number,required:true},
-    cat     :{type:String},
+    cat     :{type:Date,default:new Date()},
     password:{type:String},
     
 },
