@@ -1,5 +1,6 @@
 var mongoose   =  require('mongoose');
-var bcrpt      =  require('bcrypt');
+var bcrypt      =  require('bcrypt');
+var SALT_WORK_FACTOR = 10;
 
 var Schema     =  mongoose.Schema;
  
@@ -8,14 +9,14 @@ var AccountSchema  = new Schema({
     name   : {type:String,required:true},
     email  : {type:String,required:false},
     role   : {type:Number,required:true},
+    cat     :{type:String},
     password:{type:String},
-    cat:{type:Date}
+    
 },
 {
     timestamps : true
 }
 );
-
 
 AccountSchema.pre("save",function(next){
     var user = this;
