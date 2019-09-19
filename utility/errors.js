@@ -7,7 +7,9 @@ var errors ={
     "invalid_tokn"          :    [600,"Access without token is not authorised"],
     "account_not_exists"    :    [700,"Account doesnot exists"],
     "password_not_match"    :    [800,"Password not match with this number"],
-    "only_admin_rights"     :    [900,"Only admin can do CRUD operations"]
+    "only_admin_rights"     :    [900,"Only admin can do CRUD operations"],
+    "base_url_invalid"      :    [1000,"Base url Invalid"],
+    "original_url_invalid"  :    [1100,"Original Url is not valid"]
 }
 
 

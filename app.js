@@ -4,7 +4,12 @@ var cookieParser           =   require('cookie-parser');
 var logger                 =   require('morgan');
 var expressValidator       =   require('express-validator');
 
+var mongoose       = require('mongoose');
+require('./models/urls');
 var accountsRouter = require('./routes/accounts');
+var urlRouter      = require('./routes/urls');
+
+var Url     = mongoose.model('Url');
 
 require('./db/connect');
 
@@ -56,7 +61,24 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.get('/:code',(req,res)=>{
+    console.log(req.params.code);
+    var code = req.params.code;
+    Url.findOne({code:code},function(err,urlFind){
+        if(err){
+            console.log(err);
+            return;
+        }
+        if(urlFind){
+            return res.redirect(urlFind.originalUrl);
+        }else{
+            return res.send("opps the url is not valid");
+        }
+    })
+})
+
 
 app.use('/accounts', accountsRouter);
+app.use('/urls',urlRouter);
 
 module.exports = app;
