@@ -8,7 +8,8 @@ var UrlDetailsSchema  = new Schema({
     device:{type:String},
     country:{type:String},
     os:{type:String},
-    times:{type:Number,default:0}
+    times:{type:Number,default:0},
+    time:{type:Date,default:new Date()}
 },
 {
     timestamps : true

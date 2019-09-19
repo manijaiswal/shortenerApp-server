@@ -68,14 +68,16 @@ app.use(function(req, res, next) {
 // app.use(expressip().getIpInfoMiddleware);
 
 app.get('/:code',(req,res)=>{
-    var ip = req.ip;
+    var ip;
+    if (req.headers['x-forwarded-for']) {
+        ip = req.headers['x-forwarded-for'].split(",")[0];
+    } else if (req.connection && req.connection.remoteAddress) {
+        ip = req.connection.remoteAddress;
+    } else {
+    ip = req.ip;
+    }
     var geo = geoip.lookup(req.ip);
     var userAgent = req.headers['user-agent'];
- 
-    console.log(ua.parseUA(userAgent).toString());
-    console.log(ua.parseOS(userAgent).toString());
-    console.log(ua.parseDevice(userAgent).toString());
-
     var code = req.params.code;
     if(code[code.length-1]=='+'){
         console.log('ye wala he')
@@ -92,16 +94,17 @@ app.get('/:code',(req,res)=>{
                 if(err){
                     return res.send("something went wrong");
                 }
-                if(ip=='::1'){
-                    ip = '127.0.0.1'
-                }
-                UrlDetails.findOne({ip:ip,code},function(err,urlDtl){
+                var r       = ua.parse(userAgent);
+                var browser = r.ua.family;
+                var device  = r.device.family;
+                var os      = r.os.family;
+                var country = geo ? geo.country : 'IN';
+                UrlDetails.findOne({ip:ip,code,browser,device,os,time:new Date()},function(err,urlDtl){
                     if(err){
                         return res.send("something went wrong");
                     }
                     if(urlDtl){
                         var dtl_id = urlDtl._id;
-    
                         UrlDetails.updateOne({_id:dtl_id},{$inc:{times:1}},function(err,updated){
                             if(err){
                                 return res.send("something went wrong");
@@ -109,11 +112,10 @@ app.get('/:code',(req,res)=>{
                             return res.redirect(urlFind.originalUrl);
                         })
                     }else{
-                        var browser = ua.parseUA(userAgent).toString();
-                        var device  = ua.parseDevice(userAgent).toString();
-                        var os      = ua.parseOS(userAgent).toString()
-                        var country = geo ? geo.country : 'India';
-                        var saveObj = {code,browser,ip,device,os,country}
+                        // var browser = ua.parseUA(userAgent).toString();
+                        // var device  = ua.parseDevice(userAgent).toString();
+                        // var os      = ua.parseOS(userAgent).toString()
+                        var saveObj = {code,browser,ip,device,os,country,times:1}
                         var UrlDtl  = new UrlDetails(saveObj);
                         UrlDtl.save(function(err,saved){
                             if(err){
