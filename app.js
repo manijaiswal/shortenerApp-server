@@ -81,7 +81,7 @@ app.get('/:code',(req,res)=>{
     var code = req.params.code;
     if(code[code.length-1]=='+'){
         console.log('ye wala he')
-        return res.redirect('http://localhost:3000/dashboard?code='+code);
+        return res.redirect('https://shrtnrapp.herokuapp.com/dashboard?code='+code);
     }
     Url.findOne({code:code},function(err,urlFind){
         if(err){
