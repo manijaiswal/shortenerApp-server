@@ -76,7 +76,7 @@ app.get('/:code',(req,res)=>{
     } else {
     ip = req.ip;
     }
-    var geo = geoip.lookup(req.ip);
+    var geo = geoip.lookup(ip);
     var userAgent = req.headers['user-agent'];
     var code = req.params.code;
     if(code[code.length-1]=='+'){
